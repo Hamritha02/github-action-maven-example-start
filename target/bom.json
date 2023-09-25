@@ -1,10 +1,12 @@
 {
   "bomFormat" : "CycloneDX",
   "specVersion" : "1.4",
+
   "serialNumber" : "urn:uuid:0281be57-7eff-4ecc-9b7d-0fce5db8da2f",
   "version" : 1,
   "metadata" : {
     "timestamp" : "2023-09-25T07:21:46Z",
+
     "tools" : [
       {
         "vendor" : "OWASP Foundation",
@@ -49,16 +51,20 @@
     "component" : {
       "group" : "org.kth",
       "name" : "github-action-maven-tutorial",
+
       "version" : "1.0.19",
       "licenses" : [ ],
       "purl" : "pkg:maven/org.kth/github-action-maven-tutorial@1.0.19?type=jar",
       "type" : "library",
       "bom-ref" : "pkg:maven/org.kth/github-action-maven-tutorial@1.0.19?type=jar"
+
     }
   },
   "dependencies" : [
     {
+
       "ref" : "pkg:maven/org.kth/github-action-maven-tutorial@1.0.19?type=jar",
+
       "dependsOn" : [ ]
     }
   ]
