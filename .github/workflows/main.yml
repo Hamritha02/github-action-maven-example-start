@@ -33,12 +33,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Set Artifact Version
-      run: |
-        # Extract the version from pom.xml
-        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        echo "version=$version" >> $GITHUB_ENV
-
     - name: Install Talisman
       run: |
           wget https://github.com/thoughtworks/talisman/releases/latest/download/talisman_linux_amd64 -O talisman
@@ -52,7 +46,7 @@ jobs:
     - name: Upload Report
       uses: actions/upload-artifact@v3
       with:
-          name: talisman-scan-report-${{ env.version }}
+          name: talisman-scan-report-$GITHUB_RUN_NUMBER
           path: talisman_report/talisman_reports/data
 
   Build_and_test:
@@ -123,7 +117,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-          name: artifact-${{ env.version }}
+          name: artifact-$GITHUB_RUN_NUMBER
           path: staging
     #- uses: actions/upload-artifact@v3
      # with:
@@ -148,7 +142,7 @@ jobs:
     - name: Upload SBOM report to artifact
       uses: actions/upload-artifact@v3
       with:
-          name: sbom-${{ env.version }}
+          name: sbom-$GITHUB_RUN_NUMBER
           path: target/bom.xml
 
     - name: Check Commit Message
@@ -159,33 +153,6 @@ jobs:
                 echo "::set-output name=skip::true"
               fi
       continue-on-error: true
-
-    - name: Update Pom.xml Version
-      if: steps.commit-message.outputs.skip != 'true'
-      run: |
-            # Increment the version number, e.g., using Semantic Versioning
-            # Replace this with your versioning logic
-            current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-            
-            # Use echo and pipe to split the version string
-            IFS='.' read -ra version_parts <<< "$current_version"
-            major="${version_parts[0]}"
-            minor="${version_parts[1]}"
-            patch="${version_parts[2]}"
-            
-            # Increment the patch version
-            new_patch=$((patch + 1))
-            
-            # Construct the new version string
-            new_version="$major.$minor.$new_patch"
-            
-            # Use the Maven Versions Plugin to update the version in the pom.xml
-            mvn versions:set -DnewVersion="$new_version"
-            
-            # Commit the updated pom.xml locally
-            git config --global user.email "preethiagnest@gmail.com"
-            git config --global user.name "PreethiAgnes"
-            git commit -am "[skip ci]"
 
     - name: Push Changes to Repository
       if: steps.commit-message.outputs.skip != 'true'
