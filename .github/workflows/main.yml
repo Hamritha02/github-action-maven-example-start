@@ -88,20 +88,10 @@ jobs:
       
     - name: Build Test Maven
       run: mvn -B package --file pom.xml -DskipTests   
-      
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:  
-        token: ${{secrets.PAT_TOKEN }}
-
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'adopt'
           
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload Artifac
+      run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+    - uses: actions/upload-artifact@v3
       with:
           name: "artifact-${{ github.run_number }}"
           path: staging
