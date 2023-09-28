@@ -123,7 +123,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-          name: ${ BUILD_NUMBER }
+          name: artifact-${{ env.BUILD_NUMBER }}
           path: staging
     #- uses: actions/upload-artifact@v3
      # with:
