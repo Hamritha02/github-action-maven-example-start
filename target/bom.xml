@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <bom serialNumber="urn:uuid:d7598b9d-165e-43d0-b319-7fe7bae5ac6f" version="1" xmlns="http://cyclonedx.org/schema/bom/1.4">
   <metadata>
     <timestamp>2023-09-28T11:35:08Z</timestamp>
+
     <tools>
       <tool>
         <vendor>OWASP Foundation</vendor>
@@ -19,6 +21,7 @@
         </hashes>
       </tool>
     </tools>
+
     <component type="library" bom-ref="pkg:maven/org.kth/github-action-maven-tutorial@1.0.23?type=jar">
       <group>org.kth</group>
       <name>github-action-maven-tutorial</name>
@@ -29,5 +32,8 @@
   </metadata>
   <dependencies>
     <dependency ref="pkg:maven/org.kth/github-action-maven-tutorial@1.0.23?type=jar"/>
+
+
+
   </dependencies>
 </bom>

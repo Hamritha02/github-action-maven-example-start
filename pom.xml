@@ -8,7 +8,9 @@
     <artifactId>github-action-maven-tutorial</artifactId>
 
 
+
     <version>1.0.24</version>
+
 
 
     <properties>
