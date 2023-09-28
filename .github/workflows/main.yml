@@ -46,7 +46,7 @@ jobs:
     - name: Upload Report
       uses: actions/upload-artifact@v3
       with:
-          name: talisman-scan-report-$GITHUB_RUN_NUMBER
+          name: "talisman-scan-report-${{ github.run_number }}"
           path: talisman_report/talisman_reports/data
 
   Build_and_test:
@@ -99,26 +99,6 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-        
-    - name: Set Artifact Name with Version
-      run: |
-              # Extract the version from pom.xml
-              version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          
-              # Create a directory with the version number
-              mkdir -p "staging/$version"
-          
-              # Copy the JAR file to the versioned directory
-              cp target/*jar-with-dependencies.jar "staging/$version"
-          
-              # Set the version as an environment variable
-              echo "version=$version" >> $GITHUB_ENV
-              
-    - name: Set up environment
-      run: |
-          # Retrieve the build number from the environment
-          BUILD_NUMBER=$GITHUB_RUN_NUMBER
-          echo "Build number is $BUILD_NUMBER"
           
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
@@ -148,26 +128,8 @@ jobs:
     - name: Upload SBOM report to artifact
       uses: actions/upload-artifact@v3
       with:
-          name: sbom-$GITHUB_RUN_NUMBER
-          path: target/bom.xml
-
-    - name: Check Commit Message
-      id: commit-message
-      run: |
-              if [[ "$(git log -1 --pretty=%B)" == *"[skip ci]"* ]]; then
-                echo "Commit message indicates skipping workflow."
-                echo "::set-output name=skip::true"
-              fi
-      continue-on-error: true
-
-    - name: Push Changes to Repository
-      if: steps.commit-message.outputs.skip != 'true'
-      run: |
-                # Push the changes to the repository
-                git push origin
-      env:
-                  PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-    
+          name: "sbom-${{ github.run_number }}"
+          path: target/bom.xml  
    
   Docker_push:
     needs: Build_and_test
