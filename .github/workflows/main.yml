@@ -113,11 +113,17 @@ jobs:
           
               # Set the version as an environment variable
               echo "version=$version" >> $GITHUB_ENV
+              
+    - name: Set up environment
+        run: |
+          # Retrieve the build number from the environment
+          BUILD_NUMBER=$GITHUB_RUN_NUMBER
+          echo "Build number is $BUILD_NUMBER"
           
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-          name: artifact-$GITHUB_RUN_NUMBER
+          name: artifact-$BUILD_NUMBER
           path: staging
     #- uses: actions/upload-artifact@v3
      # with:
