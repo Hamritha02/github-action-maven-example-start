@@ -115,7 +115,7 @@ jobs:
               echo "version=$version" >> $GITHUB_ENV
               
     - name: Set up environment
-        run: |
+      run: |
           # Retrieve the build number from the environment
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
           echo "Build number is $BUILD_NUMBER"
