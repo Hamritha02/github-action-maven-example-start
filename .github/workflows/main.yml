@@ -1,6 +1,5 @@
 
 name: Maven-poc
-
 on: 
  pull_request:
     branches:
