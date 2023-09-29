@@ -171,10 +171,9 @@ jobs:
     needs: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Call Shared Workflow - Notification
+      - name: Use Shared Workflow
         uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
         with:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
       - name: Wait for Shared Workflow Completion
         run: echo "Shared workflow completed successfully."
-     
