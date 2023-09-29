@@ -175,8 +175,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Use Shared Workflow
-        uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
+      - uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
         with:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
      
