@@ -1,8 +1,8 @@
 name: Maven-poc
 on: 
  pull_request:
-    branches:
-      - master
+    #branches:
+      #- master
     types:
       - closed 
  push: 
