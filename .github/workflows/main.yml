@@ -1,11 +1,12 @@
-
 name: Maven-poc
 on: 
  pull_request:
-    branches:
-      - master
+
+    #branches:
+      #- master
     types:
-      - closed
+      - closed 
+
  push: 
    branches:
       - feature
@@ -27,17 +28,10 @@ jobs:
                     "text": "'"${MESSAGE}"'"
                   }' "${TEAMS_WEBHOOK_URL}"
   pre-push_hook:
-    needs: Job-Starting-Notification
     runs-on: ubuntu-latest    
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Set Artifact Version
-      run: |
-        # Extract the version from pom.xml
-        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        echo "version=$version" >> $GITHUB_ENV
 
     - name: Install Talisman
       run: |
@@ -52,7 +46,7 @@ jobs:
     - name: Upload Report
       uses: actions/upload-artifact@v3
       with:
-          name: talisman-scan-report-${{ env.version }}
+          name: "talisman-scan-report-${{ github.run_number }}"
           path: talisman_report/talisman_reports/data
 
   Build_and_test:
@@ -94,36 +88,12 @@ jobs:
       
     - name: Build Test Maven
       run: mvn -B package --file pom.xml -DskipTests   
-      
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:  
-        token: ${{secrets.PAT_TOKEN }}
-
-    - name: Set up JDK
-      uses: actions/setup-java@v3
+          
+    - name: Upload Artifac
+      run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+    - uses: actions/upload-artifact@v3
       with:
-        java-version: '11'
-        distribution: 'adopt'
-        
-    - name: Set Artifact Name with Version
-      run: |
-              # Extract the version from pom.xml
-              version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          
-              # Create a directory with the version number
-              mkdir -p "staging/$version"
-          
-              # Copy the JAR file to the versioned directory
-              cp target/*jar-with-dependencies.jar "staging/$version"
-          
-              # Set the version as an environment variable
-              echo "version=$version" >> $GITHUB_ENV
-          
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-          name: artifact-${{ env.version }}
+          name: "artifact-${{ github.run_number }}"
           path: staging
     #- uses: actions/upload-artifact@v3
      # with:
@@ -148,53 +118,8 @@ jobs:
     - name: Upload SBOM report to artifact
       uses: actions/upload-artifact@v3
       with:
-          name: sbom-${{ env.version }}
-          path: target/bom.xml
-
-    - name: Check Commit Message
-      id: commit-message
-      run: |
-              if [[ "$(git log -1 --pretty=%B)" == *"[skip ci]"* ]]; then
-                echo "Commit message indicates skipping workflow."
-                echo "::set-output name=skip::true"
-              fi
-      continue-on-error: true
-
-    - name: Update Pom.xml Version
-      if: steps.commit-message.outputs.skip != 'true'
-      run: |
-            # Increment the version number, e.g., using Semantic Versioning
-            # Replace this with your versioning logic
-            current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-            
-            # Use echo and pipe to split the version string
-            IFS='.' read -ra version_parts <<< "$current_version"
-            major="${version_parts[0]}"
-            minor="${version_parts[1]}"
-            patch="${version_parts[2]}"
-            
-            # Increment the patch version
-            new_patch=$((patch + 1))
-            
-            # Construct the new version string
-            new_version="$major.$minor.$new_patch"
-            
-            # Use the Maven Versions Plugin to update the version in the pom.xml
-            mvn versions:set -DnewVersion="$new_version"
-            
-            # Commit the updated pom.xml locally
-            git config --global user.email "preethiagnest@gmail.com"
-            git config --global user.name "PreethiAgnes"
-            git commit -am "[skip ci]"
-
-    - name: Push Changes to Repository
-      if: steps.commit-message.outputs.skip != 'true'
-      run: |
-                # Push the changes to the repository
-                git push origin
-      env:
-                  PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-    
+          name: "sbom-${{ github.run_number }}"
+          path: target/bom.xml  
    
   Docker_push:
     needs: Build_and_test
@@ -248,12 +173,9 @@ jobs:
     needs: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Send Notification to Teams
-      env:
+      - name: Use Shared Workflow
+        uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
+        with:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-      run: |
-                  MESSAGE="Your workflow has completed successfully!"
-                  curl -X POST -H "Content-Type: application/json" -d '{
-                    "text": "'"${MESSAGE}"'"
-                  }' "${TEAMS_WEBHOOK_URL}"
-     
+      - name: Wait for Shared Workflow Completion
+        run: echo "Shared workflow completed successfully."
