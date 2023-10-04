@@ -12,6 +12,7 @@ jobs:
   ending-notification:
     runs-on: ubuntu-latest
     steps:
+    
       - name: Send Notification to Teams
         env:
           TEAMS_WEBHOOK_URL: ${{ inputs.TEAMS_WEBHOOK_URL }}
