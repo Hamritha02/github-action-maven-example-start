@@ -168,8 +168,8 @@ jobs:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   Job-Ending-Notification:
-    needs: Deploy
-    runs-on: ubuntu-latest
+  needs: Deploy
+  runs-on: ubuntu-latest
     steps:
       - name: Use Shared Workflow
         uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
