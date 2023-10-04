@@ -172,7 +172,7 @@ jobs:
   Job-Ending-Notification:
     needs: Deploy
     runs-on: ubuntu-latest
-      uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v2
-      with:
-        TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v2
+    with:
+      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
 
