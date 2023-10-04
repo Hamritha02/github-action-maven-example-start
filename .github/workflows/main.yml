@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
     with:
-          message: 'Job Started!'
+      message: 'Job Started!'
     secrets:
       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
   pre-push_hook:
@@ -169,7 +169,7 @@ jobs:
     needs: Deploy 
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
     with:
-          message: 'Job Completed Successfully!'
+      message: 'Job Completed Successfully!'
     secrets:
       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
 
