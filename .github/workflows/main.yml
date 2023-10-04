@@ -172,6 +172,6 @@ jobs:
   Job-Ending-Notification:
     needs: Deploy
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
-    with:
-      TEAMS_WEBHOOK_URL: https://ardianet.webhook.office.com/webhookb2/bd1e3895-a47f-4e5a-a35a-5a7ea01e8079@3b0e7247-e0d5-44bf-8ed1-d01b18d16ca2/IncomingWebhook/0ab57e1fb870430ab2daa8607ed440a9/82026b76-f880-4254-9012-38b6a55d5e3d
+    secrets:
+      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
     #secrets: inherit
