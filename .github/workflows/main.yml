@@ -17,7 +17,6 @@ permissions:
   contents: read
 jobs:
   Job-Starting-Notification:
-    runs-on: ubuntu-latest
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
     with:
       message: Job Started!
