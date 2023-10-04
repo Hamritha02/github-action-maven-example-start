@@ -173,6 +173,8 @@ jobs:
     needs: Deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
       - name: Use Shared Workflow
         uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
         with:
