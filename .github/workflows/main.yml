@@ -170,11 +170,11 @@ jobs:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   Job-Ending-Notification:
-  needs: Deploy
-  runs-on: ubuntu-latest
-  steps:
-    - name: Use Shared Workflow
-      uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v2
-      with:
-        TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Shared Workflow
+        uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v2
+        with:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
 
