@@ -171,7 +171,10 @@ jobs:
 
   Job-Ending-Notification:
     needs: Deploy
+        - name: Set up Environment
+          run: |
+            echo "TEAMS_WEBHOOK_URL=${{ secrets.TEAMS_WEBHOOK_URL }}" >> $GITHUB_ENV
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
-    with:
-      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-    secrets: inherit
+    #with:
+      #TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    #secrets: inherit
