@@ -2,6 +2,7 @@
 <bom serialNumber="urn:uuid:6ed417ef-271f-4589-9ca9-66c0ddd115c3" version="1" xmlns="http://cyclonedx.org/schema/bom/1.4">
   <metadata>
     <timestamp>2023-09-28T11:58:30Z</timestamp>
+
     <tools>
       <tool>
         <vendor>OWASP Foundation</vendor>
