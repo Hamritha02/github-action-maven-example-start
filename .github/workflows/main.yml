@@ -176,9 +176,9 @@ jobs:
       #- name: Checkout Repository
         #uses: actions/checkout@v3
       #- name: Use Shared Workflow
-        uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
-        with:
-          repo-token: ${{ secrets.PAT_TOKEN }}
-          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@v1
+      with:
+        repo-token: ${{ secrets.PAT_TOKEN }}
+        TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
       #- name: Wait for Shared Workflow Completion
         #run: echo "Shared workflow completed successfully."
