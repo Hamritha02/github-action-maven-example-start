@@ -10,7 +10,7 @@ on:
  push: 
    branches:
       - feature
-      - master
+      #- master
      
 permissions:
   id-token: write
