@@ -83,7 +83,7 @@ jobs:
       run: |
           # Use your code coverage tool and threshold here
           coverage=$(mvn --batch-mode -Dmaven.test.failure.ignore=false test)
-          echo "$coverage";
+          echo "the coverage value is $coverage";
           if [[ $coverage == 100* ]]; then
             echo "Unit tests passed 100% coverage."
           else
