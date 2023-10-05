@@ -9,8 +9,7 @@ on:
       - feature
       #- master
 
-jobs:
- 
+jobs: 
   Job-Starting-Notification:
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
     with:
