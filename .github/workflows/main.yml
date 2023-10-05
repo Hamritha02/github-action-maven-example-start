@@ -1,21 +1,22 @@
 name: Maven-poc
 on: 
  pull_request:
-
-    #branches:
-      #- master
-    types:
-      - closed 
+   types:
+     - closed 
 
  push: 
    branches:
       - feature
       #- master
-     
-permissions:
-  id-token: write
-  contents: read
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug PR Event
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "Base ref: ${{ github.base_ref }}"
+          echo "Head ref: ${{ github.head_ref }}"
   Job-Starting-Notification:
     uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
     with:
