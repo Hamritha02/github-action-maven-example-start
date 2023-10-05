@@ -81,20 +81,23 @@ jobs:
 
     - name: Calculate Test Pass Percentage
       run: |
-        # Count the total number of tests
-        total_tests=$(grep -c '<testcase' target/surefire-reports/*.xml)
+        # Run the tests and store the results in a variable
+        test_results=$(mvn --batch-mode -Dmaven.test.failure.ignore=false test)
 
-        # Count the number of failed tests
-        failed_tests=$(grep -c '<failure' target/surefire-reports/*.xml)
+        # Extract the relevant information from the test results
+        tests_run=$(echo "$test_results" | grep -oP 'Tests run: \K[0-9]+')
+        failures=$(echo "$test_results" | grep -oP 'Failures: \K[0-9]+')
+        errors=$(echo "$test_results" | grep -oP 'Errors: \K[0-9]+')
 
-        # Calculate pass percentage
-        pass_percentage=$((100 - (failed_tests * 100 / total_tests)))
+        # Calculate the pass percentage
+        total_tests=$((tests_run - failures - errors))
+        pass_percentage=$((total_tests * 100 / tests_run))
 
         # Print pass percentage
         echo "Unit Test Pass Percentage: $pass_percentage%"
-        
-        # Exit with non-zero status if pass percentage is less than 100
-        if [ "$pass_percentage" -lt 100 ]; then
+
+        # Exit with non-zero status if there are test failures or errors
+        if [ "$failures" -gt 0 ] || [ "$errors" -gt 0 ]; then
           exit 1
         fi
           
