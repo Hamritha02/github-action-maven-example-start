@@ -89,9 +89,19 @@ jobs:
         failures=$(echo "$test_results" | grep -oP 'Failures: \K[0-9]+')
         errors=$(echo "$test_results" | grep -oP 'Errors: \K[0-9]+')
 
+        # Default values if the information is not available
+        tests_run=${tests_run:-0}
+        failures=${failures:-0}
+        errors=${errors:-0}
+
         # Calculate the pass percentage
         total_tests=$((tests_run - failures - errors))
-        pass_percentage=$((total_tests * 100 / tests_run))
+        
+        if [ "$tests_run" -eq 0 ]; then
+          pass_percentage=100
+        else
+          pass_percentage=$((total_tests * 100 / tests_run))
+        fi
 
         # Print pass percentage
         echo "Unit Test Pass Percentage: $pass_percentage%"
@@ -100,6 +110,7 @@ jobs:
         if [ "$failures" -gt 0 ] || [ "$errors" -gt 0 ]; then
           exit 1
         fi
+
           
     - name: Upload Artifact
       run: mkdir staging && cp target/*jar-with-dependencies.jar staging
