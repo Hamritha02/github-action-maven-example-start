@@ -96,10 +96,9 @@ jobs:
 
         # Calculate the pass percentage
         total_tests=$((tests_run - failures - errors))
+        pass_percentage=0
         
-        if [ "$tests_run" -eq 0 ]; then
-          pass_percentage=100
-        else
+        if [ "$tests_run" -gt 0 ]; then
           pass_percentage=$((total_tests * 100 / tests_run))
         fi
 
@@ -110,6 +109,7 @@ jobs:
         if [ "$failures" -gt 0 ] || [ "$errors" -gt 0 ]; then
           exit 1
         fi
+
 
           
     - name: Upload Artifact
