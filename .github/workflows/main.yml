@@ -79,17 +79,24 @@ jobs:
     - name: Build Test Maven
       run: mvn -B package --file pom.xml -DskipTests   
 
-    - name: Check Unit Test Coverage
+    - name: Calculate Test Pass Percentage
       run: |
-          # Use your code coverage tool and threshold here
-          coverage=$(mvn --batch-mode -Dmaven.test.failure.ignore=false test)
-          echo "the coverage value is $coverage";
-          if [[ $coverage == 100* ]]; then
-            echo "Unit tests passed 100% coverage."
-          else
-            echo "Unit tests coverage is below 100%."
-            exit 1
-          fi
+        # Count the total number of tests
+        total_tests=$(grep -c '<testcase' target/surefire-reports/*.xml)
+
+        # Count the number of failed tests
+        failed_tests=$(grep -c '<failure' target/surefire-reports/*.xml)
+
+        # Calculate pass percentage
+        pass_percentage=$((100 - (failed_tests * 100 / total_tests)))
+
+        # Print pass percentage
+        echo "Unit Test Pass Percentage: $pass_percentage%"
+        
+        # Exit with non-zero status if pass percentage is less than 100
+        if [ "$pass_percentage" -lt 100 ]; then
+          exit 1
+        fi
           
     - name: Upload Artifact
       run: mkdir staging && cp target/*jar-with-dependencies.jar staging
