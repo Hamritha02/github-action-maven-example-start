@@ -82,7 +82,7 @@ jobs:
       run: mvn -B package --file pom.xml -DskipTests   
 
     - name: Check Unit Test Coverage
-        run: |
+      run: |
           # Use your code coverage tool and threshold here
           coverage=$(some_code_coverage_command)
           if [[ $coverage == 100* ]]; then
