@@ -1,0 +1,87 @@
+name: Maven-poc
+on: 
+ pull_request:
+   types:
+     - closed 
+
+ push: 
+   branches:
+      - feature
+      #- master
+
+jobs:
+  Job-Starting-Notification:
+    uses: Hamritha02/shared-workflows/.github/workflows/notification.yml@main
+    with:
+      message: Job Started!
+    secrets:
+      TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+  pre-push_hook:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install Talisman
+      run: |
+          wget https://github.com/thoughtworks/talisman/releases/latest/download/talisman_linux_amd64 -O talisman
+          chmod +x talisman
+          sudo mv talisman /usr/local/bin/
+
+    - name: Run Talisman Check
+      run: talisman --scan 
+      continue-on-error: true
+
+    - name: Upload Report
+      uses: actions/upload-artifact@v3
+      with:
+          name: "talisman-scan-report-${{ github.run_number }}"
+          path: talisman_report/talisman_reports/data
+
+  Build_and_test:
+    needs: pre-push_hook
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+         token: ${{secrets.PAT_TOKEN }}
+            
+    - name: Build Maven
+      run: mvn -B package --file pom.xml
+      
+   
+    - name: Unit Test
+      run: mvn --batch-mode -Dmaven.test.failure.ignore=false test
+      
+    - name: Build Test Maven
+      run: mvn -B package --file pom.xml -DskipTests   
+
+    
+
+          
+    - name: Upload Artifact
+      run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+    - uses: actions/upload-artifact@v3
+      with:
+          name: "artifact-${{ github.run_number }}"
+          path: staging
+    - name: "Get Xray Token"
+      id: xray-token
+      shell: bash
+      run: |
+        XRAY_TOKEN = $(curl -k -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$CLIENT_ID\",\"client_secret\": \"$CLIENT_SECRET\" }" https://xray.cloud.getxray.app/api/v2/authenticate| tr -d '"')
+       
+         
+    - name: "Import results to Xray"
+      id: push-to-xray
+      shell: bash 
+      run: 'curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer ${{ steps.xray-token.outputs.XRAY_TOKEN }}"  --data @"./target/surefire-reports/TEST-TestDeepThought.xml"  https://xray.cloud.getxray.app/api/v2/import/execution/xunit?projectKey=MV'
+      continue-on-error: true
+    #- uses: actions/upload-artifact@v3
+     # with:
+           # name: Package
+            #path: staging
+    
