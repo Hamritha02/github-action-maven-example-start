@@ -1,5 +1,5 @@
 name: Maven-poc
-on: 
+on:  
  pull_request:
    types:
      - closed 
