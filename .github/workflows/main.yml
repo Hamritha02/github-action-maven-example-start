@@ -129,7 +129,7 @@ jobs:
     - name: "Import results to Xray"
       id: push-to-xray
       shell: bash 
-      run: 'curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer ${{ steps.xray-token.outputs.XRAY_TOKEN }}"  --data @"/home/runner/work/github-action-maven-example-start/github-action-maven-example-start/target/surefire-reports/TEST-TestDeepThought.xml"  https://xray.cloud.getxray.app/api/v2/import/execution/junit?projectKey=MV'
+      run: 'curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer ${{ steps.xray-token.outputs.XRAY_TOKEN }}"  --data @"/home/runner/work/github-action-maven-example-start/github-action-maven-example-start/target/surefire-reports/TEST-TestDeepThought.xml"  "https://xray.cloud.getxray.app/api/v2/import/execution/junit?projectKey=MV"'
       continue-on-error: true
     #- uses: actions/upload-artifact@v3
      # with:
