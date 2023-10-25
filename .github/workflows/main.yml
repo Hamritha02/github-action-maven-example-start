@@ -74,7 +74,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Unit Test
-      run: mvn clean test -DsuiteXmlFile=testng.xml
+      run: mvn clean compile test
       
     - name: Build Test Maven
       run: mvn -B package --file pom.xml -DskipTests   
