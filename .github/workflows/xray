@@ -1,4 +1,4 @@
-name: Maven-poc
+name: xray
 on: 
  pull_request:
    types:
