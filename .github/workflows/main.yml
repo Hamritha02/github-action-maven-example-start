@@ -1,7 +1,7 @@
 name: Maven-poc 
 on:  
  pull_request:
-   types:
+   types: 
      - closed 
 
  push: 
